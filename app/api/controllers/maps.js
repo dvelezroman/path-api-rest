@@ -35,10 +35,12 @@ module.exports = {
 			});
 		} else {
 			const { from, to } = req.query;
-			const route = `${from}-${to}`;
-			const dataFromMaps = RouteCache.getRoute(route);
-			if (dataFromMaps) {
-				res.status(200).json({ status: true, data: dataFromMaps });
+			const paths = RouteCache.getPath(
+				from.replace(' ', '+').toLowerCase(),
+				to.replace(' ', '+').toLowerCase()
+			);
+			if (paths) {
+				res.status(200).json({ status: true, data: paths });
 			} else {
 				res.status(404).json({ status: false, msg: 'Distance not available.' });
 			}
