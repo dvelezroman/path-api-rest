@@ -22,12 +22,27 @@ class CacheService {
 	}
 
 	async setRoute(route, data) {
-		this.ROUTES[route] = { ...data };
-		const responseFromSavingNewRoute = await helpers.setDataToFile(this.ROUTES);
-		if (responseFromSavingNewRoute) {
-			return true;
+		let existRoute;
+		existRoute = this.ROUTES[route];
+		if (existRoute) {
+			this.ROUTES[route] = { ...data };
+			const responseFromSavingNewRoute = await helpers.setDataToFile(
+				this.ROUTES
+			);
+			if (responseFromSavingNewRoute) {
+				return true;
+			}
+		} else if (this.ROUTES[helpers.switchRoute(route)]) {
+			this.ROUTES[helpers.switchRoute(route)] = { ...data };
+			const responseFromSavingNewRoute = await helpers.setDataToFile(
+				this.ROUTES
+			);
+			if (responseFromSavingNewRoute) {
+				return true;
+			}
+		} else {
+			return false;
 		}
-		return false;
 	}
 }
 

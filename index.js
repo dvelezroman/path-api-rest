@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/ping', function (req, res) {
 	res.json({ status: true, data: '[PONG] up and running.' });
 });
