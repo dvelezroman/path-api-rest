@@ -1,8 +1,1 @@
-{
-	"quito": { "bogota": 2000, "lima": 3000, "caracas": 2500 },
-	"lima": { "quito": 3000, "santiago": 2000 },
-	"bogota": { "buenos+aires": 6000, "santiago": 5000, "quito": 2000 },
-	"buenos+aires": { "bogota": 6000, "santiago": 2000 },
-	"santiago": { "bogota": 5000, "buenos+aires": 2000, "lima": 2000 },
-	"caracas": { "quito": 2500 }
-}
+{"quito":{"bogota":2000,"lima":3000,"caracas":2500},"lima":{"quito":3000,"santiago":2000},"bogota":{"buenos+aires":6000,"santiago":5000,"quito":2000},"buenos+aires":{"bogota":6000,"santiago":2000},"santiago":{"bogota":5000,"buenos+aires":2000,"lima":2000},"caracas":{"quito":2500}}

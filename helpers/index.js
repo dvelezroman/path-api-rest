@@ -62,7 +62,7 @@ const dijkstra = graph => {
 		//Loop through each of the children, and calculate the weight to reach that child node. We'll update the weight of that node in the weights object if it is lowest or the ONLY weight available
 		for (let n in children) {
 			let newWeight = weight + children[n];
-			if (!weights[n] || weights[n] > newWeight) {
+			if (!weights[n] || weights[n] < newWeight) {
 				weights[n] = newWeight;
 				parents[n] = node;
 			}
