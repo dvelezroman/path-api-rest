@@ -15,25 +15,17 @@ class CacheService {
 		return this.ROUTES;
 	}
 
-	getRoute(route) {
-		const existRoute =
-			this.ROUTES[route] || this.ROUTES[helpers.switchRoute(route)] || null;
+	getRoute(from, to) {
+		const existRoute = (this.ROUTES[from] && this.ROUTES[from][to]) || null;
 		return existRoute;
 	}
 
-	async setRoute(route, data) {
+	async setRoute({ from, to, distance }) {
 		let existRoute;
-		existRoute = this.ROUTES[route];
+		existRoute = this.getRoute(from, to);
 		if (existRoute) {
-			this.ROUTES[route] = { ...data };
-			const responseFromSavingNewRoute = await helpers.setDataToFile(
-				this.ROUTES
-			);
-			if (responseFromSavingNewRoute) {
-				return true;
-			}
-		} else if (this.ROUTES[helpers.switchRoute(route)]) {
-			this.ROUTES[helpers.switchRoute(route)] = { ...data };
+			this.ROUTES[from][to] = distance;
+			this.ROUTES[to][from] = distance;
 			const responseFromSavingNewRoute = await helpers.setDataToFile(
 				this.ROUTES
 			);
@@ -41,7 +33,25 @@ class CacheService {
 				return true;
 			}
 		} else {
-			return false;
+			if (this.ROUTES[from]) {
+				this.ROUTES[from][to] = distance;
+			} else {
+				this.ROUTES[from] = { [to]: distance };
+			}
+			if (this.ROUTES[to]) {
+				this.ROUTES[to][from] = distance;
+			} else {
+				this.ROUTES[to] = { [from]: distance };
+			}
+
+			const responseFromSavingNewRoute = await helpers.setDataToFile(
+				this.ROUTES
+			);
+			if (responseFromSavingNewRoute) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }

@@ -1,1 +1,1 @@
-{"ecuador-argentina":{"distance":5000,"unit":"Kms"},"buenosaires-santiago":{"distance":1411,"unit":"Kms"}}
+{"quito":{"bogota":2000,"lima":3000,"caracas":2500},"bogota":{"buenos+aires":6000,"santiago":5000,"quito":2000},"buenos+aires":{"quito":5000,"bogota":6000,"santiago":2000},"santiago":{"bogota":5000,"buenos+aires":2000},"caracas":{"quito":2500}}

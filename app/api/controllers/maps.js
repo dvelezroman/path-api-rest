@@ -1,4 +1,3 @@
-const helpers = require('../../../helpers/index');
 const CacheService = require('./cache');
 
 const RouteCache = new CacheService();
@@ -9,10 +8,19 @@ module.exports = {
 			res.status(200).json(RouteCache.getAllRoutes());
 		} else {
 			const { from, to } = req.query;
-			const route = `${from}-${to}`;
-			const dataFromMaps = RouteCache.getRoute(route);
-			if (dataFromMaps) {
-				res.status(200).json({ status: true, data: dataFromMaps });
+			const distance = RouteCache.getRoute(
+				from.replace(' ', '+').toLowerCase(),
+				to.replace(' ', '+').toLowerCase()
+			);
+			if (distance) {
+				res.status(200).json({
+					status: true,
+					data: {
+						distance,
+						from: from.split('+').join(' '),
+						to: to.split('+').join(' '),
+					},
+				});
 			} else {
 				res.status(404).json({ status: false, msg: 'Distance not available.' });
 			}
@@ -37,22 +45,23 @@ module.exports = {
 		}
 	},
 	create: async (req, res, next) => {
-		const { data } = req.body;
-		const newRoute = `${data.from}-${data.to}`;
-		const existsRoute = RouteCache.getRoute(newRoute);
-		if (existsRoute) {
-			res
-				.status(200)
-				.json({ status: false, msg: 'This route already exists!' });
+		const { from, to, distance } = req.body.data;
+		const existsPath = RouteCache.getRoute(
+			from.replace(' ', '+').toLowerCase(),
+			to.replace(' ', '+').toLowerCase()
+		);
+		if (existsPath) {
+			res.status(400).json({
+				status: true,
+				msg: 'This route already exists!',
+			});
 		} else {
-			const newRouteData = {
-				distance: data.distance,
-				unit: 'Kms',
+			const newPathData = {
+				from: from.replace(' ', '+').toLowerCase(),
+				to: to.replace(' ', '+').toLowerCase(),
+				distance,
 			};
-			const responseFromSavingNewRoute = await RouteCache.setRoute(
-				newRoute,
-				newRouteData
-			);
+			const responseFromSavingNewRoute = await RouteCache.setRoute(newPathData);
 			if (responseFromSavingNewRoute) {
 				res.status(201).json({
 					status: true,
@@ -66,18 +75,19 @@ module.exports = {
 		}
 	},
 	update: async (req, res, next) => {
-		const { data } = req.body;
-		const newRoute = `${data.from}-${data.to}`;
-		const existsRoute = RouteCache.getRoute(newRoute);
-		if (existsRoute) {
-			const newRouteData = {
-				distance: data.distance,
-				unit: 'Kms',
+		const { from, to, distance } = req.body.data;
+		const existsPath = RouteCache.getRoute(
+			from.replace(' ', '+').toLowerCase(),
+			to.replace(' ', '+').toLowerCase()
+		);
+
+		if (existsPath) {
+			const newPathData = {
+				from: from.replace(' ', '+').toLowerCase(),
+				to: to.replace(' ', '+').toLowerCase(),
+				distance,
 			};
-			const responseFromSavingNewRoute = await RouteCache.setRoute(
-				newRoute,
-				newRouteData
-			);
+			const responseFromSavingNewRoute = await RouteCache.setRoute(newPathData);
 			if (responseFromSavingNewRoute) {
 				res.status(201).json({
 					status: true,
@@ -86,12 +96,12 @@ module.exports = {
 			}
 			res.status(404).json({
 				status: false,
-				msg: 'Error updating this Route!',
+				msg: 'Error saving new Route!',
 			});
 		} else {
-			res.status(404).json({
-				status: false,
-				msg: 'Route not found.',
+			res.status(400).json({
+				status: true,
+				msg: 'Route not found!',
 			});
 		}
 	},

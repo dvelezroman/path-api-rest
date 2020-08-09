@@ -28,13 +28,7 @@ const setDataToFile = data =>
 		}
 	});
 
-const switchRoute = route => {
-	const splittedRoute = route.split('-');
-	return [splittedRoute[1], splittedRoute[0]].join('-');
-};
-
 module.exports = {
 	getDataFromFile,
 	setDataToFile,
-	switchRoute,
 };
