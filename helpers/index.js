@@ -78,12 +78,16 @@ const dijkstra = graph => {
 			parent = parents[parent]; // add parent to start of path array
 		}
 
-		const results = {
-			distance: weights.finish,
-			path: optimalPath,
+		if (weights.finish) {
+			return {
+				distance: weights.finish,
+				optimalPath,
+			};
+		}
+		return {
+			status: false,
+			msg: 'Path not found.',
 		};
-
-		return results;
 	}
 };
 

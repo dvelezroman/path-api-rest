@@ -112,14 +112,27 @@ class CacheService {
 			optimalPath.push(parent);
 			parent = parents[parent]; // add parent to start of path array
 		}
-		optimalPath.reverse(); // reverse array to get correct order
+		const shortestPath = optimalPath
+			.map(route =>
+				route
+					.split('+')
+					.map(word => word[0].toUpperCase() + word.slice(1, word.length))
+					.join(' ')
+			)
+			.reverse(); // reverse array to get correct order
 
-		const results = {
-			distance: weights[to],
-			path: optimalPath,
+		if (weights[to]) {
+			return {
+				from,
+				to,
+				distance: weights[to],
+				shortestPath,
+			};
+		}
+		return {
+			status: false,
+			msg: 'Path not found.',
 		};
-
-		return results;
 	}
 }
 
