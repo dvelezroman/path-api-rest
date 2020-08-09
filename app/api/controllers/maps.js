@@ -7,33 +7,33 @@ module.exports = {
 	get: async (req, res, next) => {
 		if (!req.query.from) {
 			res.status(200).json(RouteCache.getAllRoutes());
-		}
-		const { from, to } = req.query;
-		const route = `${from}-${to}`;
-		const dataFromMaps = RouteCache.getRoute(route);
-		if (dataFromMaps) {
-			res.status(200).json({ status: true, data: dataFromMaps });
 		} else {
-			res.status(404).json({ status: false, msg: 'Distance not available.' });
+			const { from, to } = req.query;
+			const route = `${from}-${to}`;
+			const dataFromMaps = RouteCache.getRoute(route);
+			if (dataFromMaps) {
+				res.status(200).json({ status: true, data: dataFromMaps });
+			} else {
+				res.status(404).json({ status: false, msg: 'Distance not available.' });
+			}
 		}
 	},
 	getPath: async (req, res, next) => {
 		if (!req.query.from) {
-			res
-				.status(404)
-				.json({
-					status: false,
-					msg: 'Query Params are not completed',
-					help: '/maps/paths?from={cityOriginName}&to={cityDestinationName}',
-				});
-		}
-		const { from, to } = req.query;
-		const route = `${from}-${to}`;
-		const dataFromMaps = RouteCache.getRoute(route);
-		if (dataFromMaps) {
-			res.status(200).json({ status: true, data: dataFromMaps });
+			res.status(404).json({
+				status: false,
+				msg: 'Query Params are not completed',
+				help: '/maps/paths?from={cityOriginName}&to={cityDestinationName}',
+			});
 		} else {
-			res.status(404).json({ status: false, msg: 'Distance not available.' });
+			const { from, to } = req.query;
+			const route = `${from}-${to}`;
+			const dataFromMaps = RouteCache.getRoute(route);
+			if (dataFromMaps) {
+				res.status(200).json({ status: true, data: dataFromMaps });
+			} else {
+				res.status(404).json({ status: false, msg: 'Distance not available.' });
+			}
 		}
 	},
 	create: async (req, res, next) => {
