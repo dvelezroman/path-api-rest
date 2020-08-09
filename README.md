@@ -57,3 +57,28 @@ yarn start
 	}
 }
 ```
+
+### Get the optimal path between two cities [GET]
+
+```
+/maps/paths?from=Quito&to=Buenos+Aires
+```
+
+Response
+
+```
+{
+  "status": true,
+  "data": {
+    "from": "quito",
+    "to": "buenos+aires",
+    "distance": 7000,
+    "shortestPath": [
+      "Quito",
+      "Lima",
+      "Santiago",
+      "Buenos Aires"
+    ]
+  }
+}
+```

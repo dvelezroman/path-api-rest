@@ -56,6 +56,7 @@ class CacheService {
 	}
 
 	getPath(from, to) {
+		// Implementing the Dijkstra Algorithm to find the shortest path between two cities.
 		const tempRoutes = { ...this.ROUTES };
 		// delete tempRoutes[from];
 		// delete tempRoutes[to];
@@ -71,19 +72,20 @@ class CacheService {
 		}
 		// track nodes that have already been processed
 		const processed = [];
-		//Next, we’ll set the initial value of the node being processed
-		//using the lowestCostNode function. Then, we’ll begin a while loop,
-		//which will continuously look for the cheapest node.
+		// Next, we’ll set the initial value of the node being processed
+		// using the lowestCostNode function. Then, we’ll begin a while loop,
+		// which will continuously look for the cheapest node.
 		let node = helpers.findLowestWeightNode(weights, processed);
 		while (node) {
-			//Get the weight of the current node
+			// Get the weight of the current node
 
 			let weight = weights[node];
 
-			//Get all the neighbors of current node
+			// Get all the neighbors of current node
 			let children = graph[node];
 
-			//Loop through each of the children, and calculate the weight to reach that child node. We'll update the weight of that node in the weights object if it is lowest or the ONLY weight available
+			// Loop through each of the children, and calculate the weight to reach that child node.
+			// We'll update the weight of that node in the weights object if it is lowest or the ONLY weight available
 			for (let n in children) {
 				let newWeight = weight + children[n];
 				if (n !== from) {
@@ -96,10 +98,9 @@ class CacheService {
 						parents[n] = node;
 					}
 				}
-				//console.log({ parents });
 			}
 
-			//push processed data into its data structure
+			// push processed data into its data structure
 			processed.push(node);
 			// repeat until we processed all of our nodes.
 			node = helpers.findLowestWeightNode(weights, processed);
