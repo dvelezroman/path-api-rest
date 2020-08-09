@@ -60,14 +60,14 @@ class CacheService {
 		// delete tempRoutes[from];
 		// delete tempRoutes[to];
 		const graph = {
-			start: { ...this.ROUTES[from] },
-			finish: { ...this.ROUTES[to] },
+			[from]: this.ROUTES[from],
+			[to]: {},
 			...tempRoutes,
 		};
-		const weights = { ...graph.start, finish: Infinity };
+		const weights = Object.assign({}, graph[from], { [to]: Infinity });
 		const parents = { finish: null };
-		for (const child in graph.start) {
-			parents[child] = 'start';
+		for (let child in graph[from]) {
+			parents[child] = from;
 		}
 		// track nodes that have already been processed
 		const processed = [];
@@ -75,36 +75,47 @@ class CacheService {
 		//using the lowestCostNode function. Then, we’ll begin a while loop,
 		//which will continuously look for the cheapest node.
 		let node = helpers.findLowestWeightNode(weights, processed);
-
 		while (node) {
 			//Get the weight of the current node
+
 			let weight = weights[node];
 
 			//Get all the neighbors of current node
 			let children = graph[node];
-			console.log({ node, children });
+
 			//Loop through each of the children, and calculate the weight to reach that child node. We'll update the weight of that node in the weights object if it is lowest or the ONLY weight available
 			for (let n in children) {
 				let newWeight = weight + children[n];
-				if (!weights[n] || weights[n] > newWeight) {
-					weights[n] = newWeight;
-					parents[n] = node;
+				if (n !== from) {
+					if (!weights[n]) {
+						weights[n] = newWeight;
+						parents[n] = node;
+					}
+					if (weights[n] > newWeight) {
+						weights[n] = newWeight;
+						parents[n] = node;
+					}
 				}
+				//console.log({ parents });
 			}
+
 			//push processed data into its data structure
 			processed.push(node);
 			// repeat until we processed all of our nodes.
 			node = helpers.findLowestWeightNode(weights, processed);
 		}
-		let optimalPath = ['finish'];
-		let parent = parents.finish;
+
+		let optimalPath = [to];
+
+		let parent = parents[to];
 		while (parent) {
-			optimalPath.unshift(parent);
+			optimalPath.push(parent);
 			parent = parents[parent]; // add parent to start of path array
 		}
+		optimalPath.reverse(); // reverse array to get correct order
 
 		const results = {
-			distance: weights.finish,
+			distance: weights[to],
 			path: optimalPath,
 		};
 

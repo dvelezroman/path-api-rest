@@ -28,18 +28,15 @@ const setDataToFile = data =>
 		}
 	});
 
-const findLowestWeightNode = (weights, processed) => {
-	const knownNodes = Object.keys(weights);
-	const lowestWeightNode = knownNodes.reduce((lowest, node) => {
-		if (lowest === null && !processed.includes(node)) {
-			lowest = node;
-		}
-		if (weights[node] < weights[lowest] && !processed.includes(node)) {
-			lowest = node;
+const findLowestWeightNode = (costs, processed) => {
+	return Object.keys(costs).reduce((lowest, node) => {
+		if (lowest === null || costs[node] < costs[lowest]) {
+			if (!processed.includes(node)) {
+				lowest = node;
+			}
 		}
 		return lowest;
 	}, null);
-	return lowestWeightNode;
 };
 
 const dijkstra = graph => {
